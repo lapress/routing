@@ -1,0 +1,24 @@
+{
+    "name": "lapress/routes",
+    "type": "library",
+    "authors": [
+        {
+            "name": "seszcze",
+            "email": "sebastian@ably.pl"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "LaPress\\Routes\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaPress\\Routes\\RoutesServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
