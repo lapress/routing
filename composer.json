@@ -1,5 +1,5 @@
 {
-    "name": "lapress/routes",
+    "name": "lapress/routing",
     "type": "library",
     "authors": [
         {
@@ -10,13 +10,13 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "LaPress\\Routes\\": "src/"
+            "LaPress\\Routing\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "LaPress\\Routes\\RoutesServiceProvider"
+                "LaPress\\Routing\\RoutingServiceProvider"
             ]
         }
     },
