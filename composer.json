@@ -1,0 +1,24 @@
+{
+    "name": "lapress/routing",
+    "type": "library",
+    "authors": [
+        {
+            "name": "seszcze",
+            "email": "sebastian@ably.pl"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "LaPress\\Routing\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LaPress\\Routing\\RoutingServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
