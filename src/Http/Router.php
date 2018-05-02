@@ -21,13 +21,10 @@ class Router
     public static function showRoutes()
     {
         Route::namespace('LaPress\Routing\Http\Controllers')->group(function () {
-            Route::get('category/{slug}', 'PostCategoryController@show');
 
             foreach (config('wordpress.posts.routes') as $postType => $data) {
                 Route::get($data['route'], 'PostsController@show');
             }
-
-
 
             Route::prefix('wp-content')->group(function () {
                 Route::get('{f1}', 'FilesController@stream');
