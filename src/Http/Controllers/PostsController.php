@@ -5,7 +5,8 @@ namespace LaPress\Routing\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use LaPress\Models\AbstractPost;
+use LaPress\Routing\Http\Resources\PostResourceResolver;
 
 /**
  * @author    Sebastian Szczepański
@@ -22,12 +23,10 @@ class PostsController extends Controller
     {
         $post = Post::withoutGlobalScopes()->findOneByName($slug);
 
-        if (!$post || !in_array($post->post_type, config('wordpress.posts.routes.'.$post->post_type.'.post_types', []))) {
-            throw new NotFoundHttpException();
-        }
+        abort_unless($this->allow($post), 404);
 
         if ($request->wantsJson()) {
-            return $post;
+            return (new PostResourceResolver($post))->resolve();
         }
 
         return view()->first([
@@ -36,5 +35,21 @@ class PostsController extends Controller
         ], [
             'post' => $post,
         ]);
+    }
+
+    /**
+     * @param object|AbstractPost $post
+     * @return bool
+     */
+    private function allow($post)
+    {
+        if (!$post instanceof AbstractPost) {
+            return false;
+        }
+
+        return in_array(
+            $post->post_type,
+            config('wordpress.posts.routes.'.$post->post_type.'.post_types', []) //
+        );
     }
 }

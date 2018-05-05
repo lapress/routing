@@ -50,21 +50,6 @@ class TemplateController extends Controller
      */
     public function provide()
     {
-        $params = collect(app('request')->route())->last();
-
-        if (array_key_exists('p2', $params)) {
-            $parts = explode("-", $params['p2']);
-            unset($parts[0]);
-            $slug = implode("-", $parts);
-            $slug = str_replace('.html', '', $slug);
-
-            $post = Post::where('post_name', '=', $slug)->first();
-
-            if ($post instanceof Post) {
-                return redirect('/'.$post->ID.'-'.$post->post_name);
-            }
-        }
-
         $this->setupLaravelEnvironment();
 
         /*
@@ -94,7 +79,7 @@ class TemplateController extends Controller
 
         /* Loads the WordPress Template */
 
-        return $this->runScript('wp-includes/template-loader.php');
+        return $this->script()->run('wp-includes/template-loader.php');
     }
 
     /**
@@ -102,9 +87,6 @@ class TemplateController extends Controller
      */
     protected function setupLaravelEnvironment()
     {
-        app('view')->addNamespace('theme', $this->themeBladeDirectory());
-        app('translator')->addNamespace('theme', $this->themeLangDirectory());
-
         foreach (get_option('active_plugins') as $plugin_path) {
             list($plugin, $plugin_directory) = $this->parsePluginPath($plugin_path);
 
