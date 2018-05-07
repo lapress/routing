@@ -13,6 +13,11 @@ class TemplateMiddleware
 {
     use BootstrapTrait;
 
+    /**
+     * @param         $request
+     * @param Closure $next
+     * @return mixed
+     */
     public function handle($request, Closure $next)
     {
         $globals = $this->getGlobalsKeys();

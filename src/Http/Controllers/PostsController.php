@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
 use LaPress\Models\AbstractPost;
+use LaPress\Models\DataProviders\PostMetaDataProvider;
 use LaPress\Routing\Http\Resources\PostResourceResolver;
+use LaPress\Support\WordPress\PostModelResolver;
 
 /**
  * @author    Sebastian Szczepański
@@ -21,13 +23,16 @@ class PostsController extends Controller
      */
     public function show(string $slug, Request $request)
     {
-        $post = Post::withoutGlobalScopes()->findOneByName($slug);
+        $class = app(PostModelResolver::class)->resolve();
+        $post = $class::withoutGlobalScopes()->findOneByName($slug);
 
         abort_unless($this->allow($post), 404);
 
         if ($request->wantsJson()) {
             return (new PostResourceResolver($post))->resolve();
         }
+
+        PostMetaDataProvider::provide($post);
 
         return view()->first([
             'theme::'.$post->post_type,
