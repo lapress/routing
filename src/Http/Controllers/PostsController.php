@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
 use LaPress\Models\AbstractPost;
-use LaPress\Models\DataProviders\PostMetaDataProvider;
+use LaPress\Models\DataProviders\PostMetaData;
 use LaPress\Routing\Http\Resources\PostResourceResolver;
 use LaPress\Support\WordPress\PostModelResolver;
 
@@ -32,7 +32,7 @@ class PostsController extends Controller
             return (new PostResourceResolver($post))->resolve();
         }
 
-        PostMetaDataProvider::provide($post);
+        PostMetaData::provide($post);
 
         return view()->first([
             'theme::'.$post->post_type,
