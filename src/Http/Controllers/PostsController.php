@@ -25,7 +25,7 @@ class PostsController extends Controller
     {
         $class = app(PostModelResolver::class)->resolve();
         $post = $class::withoutGlobalScopes()->findOneByName($slug);
-
+        
         abort_unless($this->allow($post), 404);
 
         if ($request->wantsJson()) {

@@ -3,6 +3,7 @@
 namespace LaPress\Routing\Http;
 
 use Route;
+
 /**
  * @author    Sebastian Szczepański
  * @copyright ably
@@ -22,9 +23,11 @@ class Router
     {
         Route::namespace('LaPress\Routing\Http\Controllers')->group(function () {
 
-            foreach (config('wordpress.posts.routes') as $postType => $data) {
-                Route::get($data['route'], 'PostsController@show');
-            }
+            Route::middleware('cache.response')->group(function () {
+                foreach (config('wordpress.posts.routes') as $postType => $data) {
+                    Route::get($data['route'], 'PostsController@show');
+                }
+            });
 
             Route::prefix('wp-content')->group(function () {
                 Route::get('{f1}', 'FilesController@stream');
@@ -38,7 +41,5 @@ class Router
                 Route::get('{f1}/{f2}/{f3}/{f4}/{f5}/{f6}/{f7}/{f8}/{f9}', 'FilesController@stream');
             });
         });
-
-
     }
 }
