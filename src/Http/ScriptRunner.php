@@ -12,9 +12,9 @@ class ScriptRunner
 {
     public function bootstrap()
     {
-        
+
     }
-    
+
     /**
      * @param       $filename
      * @param array $globals
@@ -33,7 +33,7 @@ class ScriptRunner
 
         return $this->runAdmin($filename, $globals);
     }
-    
+
     /**
      * @param       $filename
      * @param array $globals
@@ -42,7 +42,13 @@ class ScriptRunner
     public function runAdmin($filename, array $globals = [])
     {
         // from wp-settings.php
-        $globals = array_merge($globals, ['wp_version', 'wp_db_version', 'tinymce_version', 'required_php_version', 'required_mysql_version']);
+        $globals = array_merge($globals, [
+            'wp_version',
+            'wp_db_version',
+            'tinymce_version',
+            'required_php_version',
+            'required_mysql_version',
+        ]);
 
         // require current directory is '{$WORDPRESS}/wp-admin/' by 'wp-admin/menu-header.php'
         chdir(wordpress_path('wp-admin'));
@@ -59,21 +65,27 @@ class ScriptRunner
             global ${$global};
         }
 
-        if (env('APP_ENV') == 'testing1') {
-            ob_start();
+//        if (env('APP_ENV') == 'testing1') {
+//            ob_start();
+//
+//            // We'll evaluate the contents of the view inside a try/catch block so we can
+//            // flush out any stray output that might get out before an error occurs or
+//            // an exception is thrown. This prevents any partial views from leaking.
+//            try {
+//                require wordpress_path($path);
+//            } catch (Exception $e) {
+//                ob_end_clean();
+//            }
+//
+//            return ltrim(ob_get_clean());
+//        } else {
+        ob_start();
+        require wordpress_path($path);
+        $response = ob_get_contents();
+        ob_end_clean();
 
-            // We'll evaluate the contents of the view inside a try/catch block so we can
-            // flush out any stray output that might get out before an error occurs or
-            // an exception is thrown. This prevents any partial views from leaking.
-            try {
-                require wordpress_path($path);
-            } catch (Exception $e) {
-                ob_end_clean();
-            }
+        return $response;
 
-            return ltrim(ob_get_clean());
-        } else {
-            require wordpress_path($path);
-        }
+//        }
     }
 }
