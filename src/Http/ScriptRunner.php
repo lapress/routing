@@ -76,8 +76,9 @@ class ScriptRunner
             return ltrim(ob_get_clean());
         } else {
             require wordpress_path($path);
-
-            ob_end_flush();
+            $response = ob_get_contents();
+            ob_end_clean();
+            return $response;
         }
     }
 }
