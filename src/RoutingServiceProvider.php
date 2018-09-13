@@ -21,7 +21,6 @@ class RoutingServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app['view']->addNamespace('theme', ThemeBladeDirectory::get());
         Route::prefix(config('wordpress.url.backend_prefix'))
              ->namespace(static::NAMESPACE)
              ->group(__DIR__.'/Http/routes.php');
