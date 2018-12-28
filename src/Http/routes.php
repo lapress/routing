@@ -1,4 +1,5 @@
 <?php
+
 ##########################
 $prefix = 'wp-admin';
 $adminUrl = config('wordpress.url.backend').'/'.$prefix.'/';
@@ -16,9 +17,10 @@ if (config('wordpress.url.backend') != config('wordpress.url.site')) {
 Route::get('login', 'LoginController@create');
 
 Route::redirect('admin', $adminUrl);
-Route::redirect('dashboard', $adminUrl);
+//Route::redirect('dashboard', $adminUrl);
 
 Route::prefix($prefix)->group(function () {
+
 
     // 2. Dashboard
     Route::get('/', ['as' => 'wordpress.admin.dashboard', 'uses' => 'DashboardController@show']);
@@ -38,6 +40,9 @@ Route::prefix($prefix)->group(function () {
 
     Route::get('load-styles.php', 'FilesController@loadStyles');
     Route::get('load-scripts.php', 'FilesController@loadScripts');
+
+    Route::get('/maint/repair.php', 'MaintenanceController@show');
+    Route::post('/maint/repair.php', 'MaintenanceController@show');
 
     Route::get('/{script}.php', 'AdminController@load');
     Route::post('/{script}.php', 'AdminController@load');

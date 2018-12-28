@@ -4,6 +4,8 @@ namespace LaPress\Routing;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use LaPress\Routing\Http\Middleware\AdminMiddleware;
+use LaPress\Routing\Http\Router;
 use LaPress\Support\ThemeBladeDirectory;
 
 /**
@@ -21,9 +23,12 @@ class RoutingServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::prefix(config('wordpress.url.backend_prefix'))
+            Router::showRoutes();
+
+            Route::prefix(config('wordpress.url.backend_prefix'))
              ->namespace(static::NAMESPACE)
              ->group(__DIR__.'/Http/routes.php');
+
 
         return;
         Route::namespace('LaPress\Routing\Http\Controllers')->group(function () {
@@ -39,7 +44,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
+        $this->app['router']->aliasMiddleware('wp-admin', AdminMiddleware::class);
     }
 
     private function registerShowRoutes()

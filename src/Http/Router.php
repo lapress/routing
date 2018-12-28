@@ -23,8 +23,11 @@ class Router
     {
         Route::namespace('LaPress\Routing\Http\Controllers')->group(function () {
 
+            Route::get('wp-json/wp/v2/{f1?}/{f2?}/{f3?}/{f4?}/{f5?}/{f6?}/{f7?}/{f8?}/{f9?}', 'WpJsonController@show');
+            Route::post('wp-json/wp/v2/{f1?}/{f2?}/{f3?}/{f4?}/{f5?}/{f6?}/{f7?}/{f8?}/{f9?}', 'WpJsonController@show');
+
             Route::middleware('cache.response')->group(function () {
-                foreach (config('wordpress.posts.routes') as $postType => $data) {
+                foreach (config('wordpress.posts.routes', []) as $postType => $data) {
                     Route::get($data['route'], 'PostsController@show');
                 }
             });
