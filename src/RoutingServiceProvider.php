@@ -40,22 +40,4 @@ class RoutingServiceProvider extends ServiceProvider
         $this->app['router']->aliasMiddleware('wp-admin', AdminMiddleware::class);
         $this->app['router']->aliasMiddleware('cache.response', CacheResponse::class);
     }
-
-    private function registerShowRoutes()
-    {
-        foreach (config('wordpress.posts.routes') as $postType => $data) {
-            Route::get($data['route'], 'PostsController@show');
-        }
-
-        return $this;
-    }
-
-    private function registerListRoutes()
-    {
-        foreach (config('wordpress.posts.types') as $type => $model) {
-            Route::get(str_plural($type), 'PostsController@index');
-        }
-
-        return $this;
-    }
 }
