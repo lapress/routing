@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use LaPress\Routing\Http\Middleware\AdminMiddleware;
 use LaPress\Routing\Http\Router;
-use LaPress\Support\ThemeBladeDirectory;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 
 /**
@@ -29,13 +28,6 @@ class RoutingServiceProvider extends ServiceProvider
             Route::prefix(config('wordpress.url.backend_prefix'))
              ->namespace(static::NAMESPACE)
              ->group(__DIR__.'/Http/routes.php');
-
-
-        return;
-        Route::namespace('LaPress\Routing\Http\Controllers')->group(function () {
-            $this->registerShowRoutes()
-                 ->registerListRoutes();
-        });
     }
 
     /**
@@ -46,7 +38,7 @@ class RoutingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app['router']->aliasMiddleware('wp-admin', AdminMiddleware::class);
-        $this->app['cache.response']->aliasMiddleware('wp-admin', CacheResponse::class);
+        $this->app['router']->aliasMiddleware('cache.response', CacheResponse::class);
     }
 
     private function registerShowRoutes()
