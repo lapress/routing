@@ -34,8 +34,8 @@ class PostsController extends Controller
         PostMetaData::provide($post);
 
         return view()->first([
-            'theme::'.$post->post_type,
-            'theme::post',
+            theme_view($post->post_type),
+            theme_view('post')
         ], [
             'post' => $post,
         ]);

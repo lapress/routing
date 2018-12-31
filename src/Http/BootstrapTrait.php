@@ -135,7 +135,7 @@ trait BootstrapTrait
 
         // Theme
         {
-            $theme = WordPress::activeTheme();
+            $theme = WordPress::activetheme_path();
             $theme_path = WordPress::themePath($theme);
 
             if (!file_exists($theme_path.'/style.css')) {
