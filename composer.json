@@ -7,7 +7,9 @@
             "email": "sebastian@ably.pl"
         }
     ],
-    "require": {},
+    "require": {
+        "spatie/laravel-responsecache": "^4.4"
+    },
     "autoload": {
         "psr-4": {
             "LaPress\\Routing\\": "src/"

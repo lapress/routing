@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use LaPress\Routing\Http\Middleware\AdminMiddleware;
 use LaPress\Routing\Http\Router;
 use LaPress\Support\ThemeBladeDirectory;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 
 /**
  * @author    Sebastian Szczepański
@@ -45,6 +46,7 @@ class RoutingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app['router']->aliasMiddleware('wp-admin', AdminMiddleware::class);
+        $this->app['cache.response']->aliasMiddleware('wp-admin', CacheResponse::class);
     }
 
     private function registerShowRoutes()

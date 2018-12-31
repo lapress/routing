@@ -3,7 +3,6 @@
 namespace LaPress\Routing\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Post;
 use Illuminate\Http\Request;
 use LaPress\Models\AbstractPost;
 use LaPress\Models\DataProviders\PostMetaData;
