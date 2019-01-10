@@ -5,6 +5,7 @@ namespace LaPress\Routing;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use LaPress\Routing\Http\Middleware\AdminMiddleware;
+use LaPress\Routing\Http\Middleware\PostTypeMiddleware;
 use LaPress\Routing\Http\Router;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 
@@ -39,5 +40,6 @@ class RoutingServiceProvider extends ServiceProvider
     {
         $this->app['router']->aliasMiddleware('wp-admin', AdminMiddleware::class);
         $this->app['router']->aliasMiddleware('cache.response', CacheResponse::class);
+        $this->app['router']->aliasMiddleware('postType', PostTypeMiddleware::class);
     }
 }

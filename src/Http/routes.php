@@ -17,15 +17,11 @@ if (config('wordpress.url.backend') != config('wordpress.url.site')) {
 Route::get('login', 'LoginController@create');
 
 Route::redirect('admin', $adminUrl);
-//Route::redirect('dashboard', $adminUrl);
-
+Route::redirect('dashboard', $adminUrl);
 Route::prefix($prefix)->group(function () {
-
-
     // 2. Dashboard
     Route::get('/', ['as' => 'wordpress.admin.dashboard', 'uses' => 'DashboardController@show']);
     Route::redirect('index.php', '/');
-
 
     // 3. Setup
     Route::get('setup-config.php', 'SetupController@edit');
