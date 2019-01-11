@@ -15,6 +15,7 @@ use LaPress\Support\WordPress\PostModelResolver;
  */
 class PostsController extends Controller
 {
+
     /**
      * @param string  $slug
      * @param Request $request
@@ -24,7 +25,7 @@ class PostsController extends Controller
     {
         $class = app(PostModelResolver::class)->resolve();
         $post = $class::withoutGlobalScopes()->findOneByName($slug);
-        
+
         abort_unless($this->allow($post), 404);
 
         if ($request->wantsJson()) {
@@ -35,7 +36,7 @@ class PostsController extends Controller
 
         return view()->first([
             theme_view($post->post_type),
-            theme_view('post')
+            theme_view('post'),
         ], [
             'post' => $post,
         ]);
@@ -50,10 +51,15 @@ class PostsController extends Controller
         if (!$post instanceof AbstractPost) {
             return false;
         }
+        $type = $post->post_type;
+
+        if ($type === 'page' && empty(config('wordpress.posts.routes.page'))) {
+            $type = 'post';
+        }
 
         return in_array(
             $post->post_type,
-            config('wordpress.posts.routes.'.$post->post_type.'.post_types', []) //
+            config('wordpress.posts.routes.'.$type.'.post_types', []) //
         );
     }
 }

@@ -40,6 +40,5 @@ class RoutingServiceProvider extends ServiceProvider
     {
         $this->app['router']->aliasMiddleware('wp-admin', AdminMiddleware::class);
         $this->app['router']->aliasMiddleware('cache.response', CacheResponse::class);
-        $this->app['router']->aliasMiddleware('postType', PostTypeMiddleware::class);
     }
 }
