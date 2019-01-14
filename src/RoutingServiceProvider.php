@@ -24,7 +24,9 @@ class RoutingServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Router::listRoutes();
         Router::showRoutes();
+
 
         Route::prefix(config('wordpress.url.backend_prefix'))
              ->namespace(static::NAMESPACE)

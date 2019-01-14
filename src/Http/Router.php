@@ -16,6 +16,7 @@ class Router
             foreach (config('wordpress.posts.types') as $type => $model) {
                 Route::get(str_plural($type), 'PostsController@index');
             }
+            Route::get(config('wordpress.posts.route'), 'PostsController@index');
         });
     }
 
