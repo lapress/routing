@@ -39,5 +39,9 @@ class RoutingServiceProvider extends ServiceProvider
             Router::show();
             Router::lists();
         });
+
+        Route::macro('postSearch', function ($postTypes = true){
+            Router::search($postTypes);
+        });
     }
 }

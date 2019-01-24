@@ -61,4 +61,20 @@ class Router
              ->namespace(static::BACKEND_NAMESPACE)
              ->group(__DIR__.'/routes.php');
     }
+
+    /**
+     * @param bool $postTypes
+     */
+    public static function search($postTypes = true)
+    {
+        Route::prefix('search')->group(function () use ($postTypes) {
+            if ($postTypes) {
+                foreach (config('wordpress.posts.types') as $type => $model) {
+                    Route::get(str_plural($type), 'SearchPostsController@index');
+                }
+            }
+
+            Route::get('/', 'SearchPostsController@index');
+        });
+    }
 }
