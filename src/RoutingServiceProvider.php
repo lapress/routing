@@ -15,8 +15,6 @@ use Spatie\ResponseCache\Middlewares\CacheResponse;
  */
 class RoutingServiceProvider extends ServiceProvider
 {
-    const NAMESPACE = 'LaPress\Routing\Http\Controllers\Admin';
-
     /**
      * Bootstrap services.
      *
@@ -24,13 +22,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Router::listRoutes();
-        Router::showRoutes();
-
-
-        Route::prefix(config('wordpress.url.backend_prefix'))
-             ->namespace(static::NAMESPACE)
-             ->group(__DIR__.'/Http/routes.php');
+        Router::backend();
     }
 
     /**
@@ -42,5 +34,10 @@ class RoutingServiceProvider extends ServiceProvider
     {
         $this->app['router']->aliasMiddleware('wp-admin', AdminMiddleware::class);
         $this->app['router']->aliasMiddleware('cache.response', CacheResponse::class);
+
+        Route::macro('postTypes', function ($withDefaultList = true) {
+            Router::show();
+            Router::lists();
+        });
     }
 }
