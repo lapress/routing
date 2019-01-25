@@ -26,10 +26,13 @@ class SearchPostsController extends BaseController
 
     /**
      * @param Request $request
+     * @return
      */
     public function index(Request $request)
     {
         /** @var AbstractPost $class */
         $class = $this->postModelResolver->resolve();
+
+        return $class::search($request->q)->paginate();
     }
 }
