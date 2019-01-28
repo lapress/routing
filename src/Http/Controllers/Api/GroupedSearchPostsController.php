@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
+
 /**
  * @author    Sebastian Szczepański
  * @copyright ably
@@ -23,12 +24,20 @@ class GroupedSearchPostsController extends BaseController
         $postModel = config('wordpress.posts.model', Post::class);
         $postTypes = config('wordpress.posts.search.searchable', []);
 
+        $posts = $postModel::search($query);
         $data = [
-            'posts' => $postModel::search($query)->take($take)->get()
+            'posts' => [
+                'count' => $posts->count(),
+                'items' => $posts->take($take)->get(),
+            ],
         ];
 
         foreach ($postTypes as $postType => $model) {
-            $data[$postType] = $model::search($query)->take($take)->get();
+            $search = $model::search($query);
+            $data[$postType] = [
+                'count' => $search->count(),
+                'items' => $search->take($take)->get(),
+            ];
         }
 
         return response()->json($data, Response::HTTP_OK);
