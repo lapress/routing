@@ -20,16 +20,15 @@ class GroupedSearchPostsController extends BaseController
     {
         $query = $request->q;
         $take = $request->take ?: config('wordpress.posts.search.grouped.take', 5);
-        $model = config('wordpress.posts.model', Post::class);
-        $postTypes = config('wordpress.posts.search.post_types', []);
+        $postModel = config('wordpress.posts.model', Post::class);
+        $postTypes = config('wordpress.posts.search.searchable', []);
 
         $data = [
-            'posts' => $model::search($query)->take($take)->get()
+            'posts' => $postModel::search($query)->take($take)->get()
         ];
 
-        foreach ($postTypes as $postType) {
-            $postModel = config('wordpress.posts.post_types.'.$postType);
-            $data[str_plural($postType)] = $postModel::search($query)->take($take)->get();
+        foreach ($postTypes as $postType => $model) {
+            $data[$postType] = $model::search($query)->take($take)->get();
         }
 
         return response()->json($data, Response::HTTP_OK);

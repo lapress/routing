@@ -77,9 +77,9 @@ class Router
                 Route::get('grouped', 'GroupedSearchPostsController@index');
             }
 
-            $postTypes = config('wordpress.posts.search.post_types', []);
+            $postTypes = config('wordpress.posts.search.searchable', []);
 
-            foreach ($postTypes as $postType) {
+            foreach ($postTypes as $postType => $model) {
                 Route::get(str_plural($postType), 'SearchPostsController@index');
             }
 
