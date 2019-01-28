@@ -65,13 +65,22 @@ class Router
     /**
      * @param bool $postTypes
      */
-    public static function search($postTypes = true)
+    public static function search()
     {
-        Route::prefix('search')->group(function () use ($postTypes) {
-            if ($postTypes) {
-                foreach (config('wordpress.posts.types') as $type => $model) {
-                    Route::get(str_plural($type), 'SearchPostsController@index');
-                }
+        Route::prefix('search')->group(function () {
+
+            if (!config('wordpress.posts.search.enabled', true)) {
+                return;
+            }
+
+            if (config('wordpress.posts.search.grouped.enable', false)) {
+                Route::get('grouped', 'GroupedSearchPostsController@index');
+            }
+
+            $postTypes = config('wordpress.posts.search.post_types', []);
+
+            foreach ($postTypes as $postType) {
+                Route::get(str_plural($postType), 'SearchPostsController@index');
             }
 
             Route::get('/', 'SearchPostsController@index');

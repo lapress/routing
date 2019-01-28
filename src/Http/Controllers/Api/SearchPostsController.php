@@ -1,6 +1,8 @@
 <?php
+
 namespace LaPress\Routing\Http\Controllers\Api;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use LaPress\Support\WordPress\PostModelResolver;
