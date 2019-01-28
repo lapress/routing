@@ -16,7 +16,7 @@ class SearchPostsController extends BaseController
     /**
      * @var PostModelResolver
      */
-    private $postModelResolver;
+    protected $postModelResolver;
 
     /**
      * @param PostModelResolver $postModelResolver
