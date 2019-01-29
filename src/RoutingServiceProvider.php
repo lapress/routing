@@ -36,8 +36,8 @@ class RoutingServiceProvider extends ServiceProvider
         $this->app['router']->aliasMiddleware('cache.response', CacheResponse::class);
 
         Route::macro('postTypes', function ($withDefaultList = true) {
-            Router::show();
             Router::lists();
+            Router::show();
         });
 
         Route::macro('postTypesSearch', function ($postTypes = true){
