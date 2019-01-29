@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
+use LaPress\Events\RegisterSearchEvent;
 
 /**
  * @author    Sebastian Szczepański
@@ -39,6 +40,8 @@ class GroupedSearchPostsController extends BaseController
                 'items' => $search->take($take)->get(),
             ];
         }
+
+        RegisterSearchEvent::dispatch($query);
 
         return response()->json($data, Response::HTTP_OK);
     }

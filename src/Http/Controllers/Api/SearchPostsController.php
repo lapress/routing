@@ -5,6 +5,7 @@ namespace LaPress\Routing\Http\Controllers\Api;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use LaPress\Events\RegisterSearchEvent;
 use LaPress\Support\WordPress\PostModelResolver;
 
 /**
@@ -34,7 +35,10 @@ class SearchPostsController extends BaseController
     {
         /** @var AbstractPost $class */
         $class = $this->postModelResolver->resolve();
+        $query = $request->q;
 
-        return $class::search($request->q)->paginate();
+        RegisterSearchEvent::dispatch($query, $class);
+
+        return $class::search($query)->paginate();
     }
 }
