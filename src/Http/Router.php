@@ -52,9 +52,6 @@ class Router
         });
     }
 
-    /**
-     *
-     */
     public static function backend()
     {
         Route::prefix(config('wordpress.url.backend_prefix'))
