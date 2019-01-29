@@ -6,6 +6,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use LaPress\Events\RegisterSearchEvent;
+use LaPress\Routing\Http\Resources\PostResourceResolver;
 use LaPress\Support\WordPress\PostModelResolver;
 
 /**
@@ -39,6 +40,10 @@ class SearchPostsController extends BaseController
 
         RegisterSearchEvent::dispatch($query, $class);
 
-        return $class::search($query)->paginate();
+        $resource = (new PostResourceResolver(new $class))->resolve();
+
+        return $resource::collection(
+            $class::search($query)->get()
+        );
     }
 }

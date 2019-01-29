@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use LaPress\Events\RegisterSearchEvent;
+use LaPress\Routing\Http\Resources\PostResourceResolver;
 
 /**
  * @author    Sebastian Szczepański
@@ -25,19 +26,22 @@ class GroupedSearchPostsController extends BaseController
         $postModel = config('wordpress.posts.model', Post::class);
         $postTypes = config('wordpress.posts.search.searchable', []);
 
+        $postResource = (new PostResourceResolver(new $postModel))->resolve();
+
         $posts = $postModel::search($query);
         $data = [
             'posts' => [
                 'count' => $posts->count(),
-                'items' => $posts->take($take)->get(),
+                'items' => $postResource::collection($posts->take($take)->get()),
             ],
         ];
 
         foreach ($postTypes as $postType => $model) {
+            $postResource = (new PostResourceResolver(new $model))->resolve();
             $search = $model::search($query);
             $data[$postType] = [
                 'count' => $search->count(),
-                'items' => $search->take($take)->get(),
+                'items' => $postResource::collection($search->take($take)->get()),
             ];
         }
 
