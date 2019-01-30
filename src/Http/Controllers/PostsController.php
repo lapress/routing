@@ -58,6 +58,9 @@ class PostsController extends Controller
         ]);
     }
 
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index()
     {
         /** @var AbstractPost $class */
@@ -68,6 +71,12 @@ class PostsController extends Controller
         $page = Page::findOneByName($typePlural);
 
         PostListMetaData::provide($typePlural, $page);
+
+        if (request()->wantsJson()) {
+            $postResource = (new PostResourceResolver(new $class))->resolve();
+
+            return $postResource::collection($posts);
+        }
 
         return view()->first([
             theme_view($typePlural.'.index'),
@@ -94,10 +103,10 @@ class PostsController extends Controller
         if ($type === 'page' && empty(config('wordpress.posts.routes.page'))) {
             $type = 'post';
         }
-        
+
         return $post->isPublished() && in_array(
-            $post->post_type,
-            config('wordpress.posts.routes.'.$type.'.post_types', []) //
-        );
+                $post->post_type,
+                config('wordpress.posts.routes.'.$type.'.post_types', []) //
+            );
     }
 }
