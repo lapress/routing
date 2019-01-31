@@ -19,12 +19,14 @@ class Router
     public static function lists($withDefaultList = true)
     {
         foreach (config('wordpress.posts.types') as $type => $model) {
+            Route::get(str_plural($type).'/page/{page}', 'PostsController@index');
             Route::get(str_plural($type), 'PostsController@index');
         }
 
         if (!$withDefaultList) {
             return;
         }
+        Route::get(config('wordpress.posts.route').'/page/{page}', 'PostsController@index');
         Route::get(config('wordpress.posts.route'), 'PostsController@index');
     }
 

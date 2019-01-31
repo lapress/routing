@@ -39,7 +39,7 @@ class PostsController extends Controller
     public function show(string $slug, Request $request)
     {
         $class = $this->postModelResolver->resolve();
-        $post = $class::withoutGlobalScopes()->findOneByName($slug);
+        $post = $class::findOneByName($slug);
 
         abort_unless($this->allow($post), 404);
 
@@ -61,18 +61,20 @@ class PostsController extends Controller
     /**
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request, int $page = null)
     {
         /** @var AbstractPost $class */
         $class = $this->postModelResolver->resolve();
-        $posts = $class::recent()->paginate();
+        $page = $page ?: $request->page ?: 1;
+        $take = config('wordpress.posts.per_page', 15);
+        $posts = $class::recent()->paginate($take, $page);
         $type = $this->postModelResolver->getPostType();
         $typePlural = str_plural($type);
         $page = Page::findOneByName($typePlural);
 
         PostListMetaData::provide($typePlural, $page);
 
-        if (request()->wantsJson()) {
+        if ($request->wantsJson()) {
             $postResource = (new PostResourceResolver(new $class))->resolve();
 
             return $postResource::collection($posts);
