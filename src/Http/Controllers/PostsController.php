@@ -67,7 +67,7 @@ class PostsController extends Controller
         $class = $this->postModelResolver->resolve();
         $page = $page ?: $request->page ?: 1;
         $take = config('wordpress.posts.per_page', 15);
-        $posts = $class::recent()->paginate($take, $page);
+        $posts = $class::recent()->paginate($take);
         $type = $this->postModelResolver->getPostType();
         $typePlural = str_plural($type);
         $page = Page::findOneByName($typePlural);
