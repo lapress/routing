@@ -37,13 +37,14 @@ class SearchPostsController extends BaseController
         /** @var AbstractPost $class */
         $class = $this->postModelResolver->resolve();
         $query = $request->q;
+        $take = $request->take ?: 100;
 
         RegisterSearchEvent::dispatch($query, $class);
 
         $resource = (new PostResourceResolver(new $class))->resolve();
 
         return $resource::collection(
-            $class::search($query)->get()
+            $class::search($query)->take($take)->get()
         );
     }
 }
