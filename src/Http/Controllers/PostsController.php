@@ -39,7 +39,8 @@ class PostsController extends Controller
     public function show(string $slug, Request $request)
     {
         $class = $this->postModelResolver->resolve();
-        $post = $class::findOneByName($slug);
+
+        $post = $class::withoutGlobalScopes()->findOneByName($slug);
 
         abort_unless($this->allow($post), 404);
 
