@@ -49,7 +49,7 @@ class PostsController extends Controller
         }
 
         PostMetaData::provide($post);
-
+        
         return view()->first([
             theme_view($post->getPostTypePlural().'.show'),
             theme_view($post->post_type),
