@@ -95,7 +95,7 @@ class PostsController extends Controller
      * @param object|AbstractPost $post
      * @return bool
      */
-    private function allow($post)
+    protected function allow($post)
     {
         if (!$post instanceof AbstractPost) {
             return false;
