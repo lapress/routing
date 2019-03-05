@@ -5,6 +5,7 @@ namespace LaPress\Routing\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use LaPress\Models\AbstractPost;
 use LaPress\Models\DataProviders\PostListMetaData;
 use LaPress\Models\DataProviders\PostMetaData;
@@ -21,7 +22,7 @@ class PostsController extends Controller
     /**
      * @var PostModelResolver
      */
-    private $postModelResolver;
+    protected $postModelResolver;
 
     /**
      * @param PostModelResolver $postModelResolver
@@ -49,7 +50,9 @@ class PostsController extends Controller
         }
 
         PostMetaData::provide($post);
-        
+
+        $this->beforeShow($post);
+
         return view()->first([
             theme_view($post->getPostTypePlural().'.show'),
             theme_view($post->post_type),
@@ -75,6 +78,8 @@ class PostsController extends Controller
 
         PostListMetaData::provide($typePlural, $page);
 
+        $this->beforeIndex($posts);
+
         if ($request->wantsJson()) {
             $postResource = (new PostResourceResolver(new $class))->resolve();
 
@@ -90,6 +95,22 @@ class PostsController extends Controller
             'type'       => $type,
             'typePlural' => $typePlural,
         ]);
+    }
+
+    /**
+     * @param Post $post
+     */
+    protected function beforeShow(Post $post)
+    {
+        //
+    }
+
+    /**
+     * @param Collection $posts
+     */
+    protected function beforeIndex(Collection $posts)
+    {
+        //
     }
 
     /**
