@@ -5,6 +5,7 @@ namespace LaPress\Routing\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use LaPress\Models\AbstractPost;
 use LaPress\Models\DataProviders\PostListMetaData;
@@ -107,9 +108,9 @@ class PostsController extends Controller
 
 
     /**
-     * @param Collection $posts
+     * @param Collection|LengthAwarePaginator $posts
      */
-    protected function beforeIndex(Collection $posts)
+    protected function beforeIndex($posts)
     {
         //
     }
