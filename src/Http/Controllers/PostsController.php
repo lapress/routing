@@ -105,6 +105,7 @@ class PostsController extends Controller
         //
     }
 
+
     /**
      * @param Collection $posts
      */
