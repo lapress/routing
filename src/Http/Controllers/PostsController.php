@@ -39,7 +39,8 @@ class PostsController extends Controller
     public function show(string $slug, Request $request)
     {
         $class = $this->postModelResolver->resolve();
-        $post = $class::findOneByName($slug);
+
+        $post = $class::withoutGlobalScopes()->findOneByName($slug);
 
         abort_unless($this->allow($post), 404);
 
@@ -48,7 +49,7 @@ class PostsController extends Controller
         }
 
         PostMetaData::provide($post);
-
+        
         return view()->first([
             theme_view($post->getPostTypePlural().'.show'),
             theme_view($post->post_type),
