@@ -52,15 +52,15 @@ class PostsController extends Controller
 
         PostMetaData::provide($post);
 
-        $this->beforeShow($post);
+        $data = $this->beforeShow($post);
 
         return view()->first([
             theme_view($post->getPostTypePlural().'.show'),
             theme_view($post->post_type),
             theme_view('post'),
-        ], [
+        ], array_merge([
             'post' => $post,
-        ]);
+        ], $data));
     }
 
     /**
@@ -79,7 +79,7 @@ class PostsController extends Controller
 
         PostListMetaData::provide($typePlural, $page);
 
-        $this->beforeIndex($posts);
+        $data = $this->beforeIndex($posts);
 
         if ($request->wantsJson()) {
             $postResource = (new PostResourceResolver(new $class))->resolve();
@@ -91,28 +91,30 @@ class PostsController extends Controller
             theme_view($typePlural.'.index'),
             theme_view('posts'),
             theme_view('index'),
-        ], [
+        ], array_merge([
             'posts'      => $posts,
             'type'       => $type,
             'typePlural' => $typePlural,
-        ]);
+        ], $data));
     }
 
     /**
      * @param Post $post
+     * @return array
      */
-    protected function beforeShow(Post $post)
+    protected function beforeShow(Post $post): array
     {
-        //
+       return [];
     }
 
 
     /**
      * @param Collection|LengthAwarePaginator $posts
+     * @return array
      */
-    protected function beforeIndex($posts)
+    protected function beforeIndex($posts): array
     {
-        //
+        return [];
     }
 
     /**
