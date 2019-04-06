@@ -104,7 +104,7 @@ class PostsController extends Controller
      */
     protected function beforeShow(Post $post): array
     {
-       return [];
+        return [];
     }
 
 
@@ -131,10 +131,13 @@ class PostsController extends Controller
         if ($type === 'page' && empty(config('wordpress.posts.routes.page'))) {
             $type = 'post';
         }
+        $route = trim(config('wordpress.posts.routes.'.$type.'.route'), '/');
 
-        return $post->isPublished() && in_array(
-                $post->post_type,
-                config('wordpress.posts.routes.'.$type.'.post_types', []) //
-            );
+        return $post->isPublished()
+               && trim($route, '/') === request()->route()->uri()
+               && in_array(
+                   $post->post_type,
+                   config('wordpress.posts.routes.'.$type.'.post_types', []) //
+               );
     }
 }
