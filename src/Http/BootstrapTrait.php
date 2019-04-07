@@ -116,12 +116,13 @@ trait BootstrapTrait
     {
         // Plugins
         foreach (WordPress::activePlugins() as $plugin_script) {
-            if (!file_exists(wordpress_path('wp-content/plugins/').$plugin_script)) {
-                info("Error: Plugin '$plugin_script' is not found.");
+
+            if (!WordPress\Plugin::exists($plugin_script)) {
+                info("Error: Plugin '$plugin_script' was not found.");
                 continue;
             }
 
-            $plugin_data = get_file_data(wordpress_path('wp-content/plugins/').$plugin_script, [
+            $plugin_data = get_file_data(WordPress\Plugin::path($plugin_script), [
                 'php_autoload_dir' => 'PHP Autoload',
                 'php_namespace' => 'PHP Namespace',
             ]);
@@ -138,13 +139,14 @@ trait BootstrapTrait
             $theme = WordPress::activetheme_path();
             $theme_path = WordPress::themePath($theme);
 
-            if (!file_exists($theme_path.'/style.css')) {
-                info("Error: Theme '$theme' is not found.");
+
+            if (!WordPress\Theme::exists($theme)) {
+                info("Error: Theme '$theme' does not exist.");
 
                 return;
             }
-
-            $theme_data = get_file_data($theme_path.'/style.css', [
+            
+            $theme_data = get_file_data(WordPress\Theme::style($theme), [
                 'php_autoload_dir' => 'PHP Autoload',
                 'php_namespace' => 'PHP Namespace',
             ]);
