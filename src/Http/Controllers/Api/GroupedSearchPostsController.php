@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use LaPress\Events\RegisterSearchEvent;
 use LaPress\Routing\Http\Resources\PostResourceResolver;
+use Laravel\Scout\Builder;
 
 /**
  * @author    Sebastian Szczepański
@@ -25,7 +26,7 @@ class GroupedSearchPostsController extends BaseController
         $take = $request->take ?: config('wordpress.posts.search.grouped.take', 5);
         $postModel = config('wordpress.posts.model', Post::class);
         $postTypes = config('wordpress.posts.search.searchable', []);
-        
+
         if ($query === '*' || in_array($request->ip(), config('scout.blockedIps', []))) {
             return [];
         }
@@ -54,7 +55,11 @@ class GroupedSearchPostsController extends BaseController
         return response()->json($data, Response::HTTP_OK);
     }
 
-    protected function decorateSearch($posts)
+    /**
+     * @param Builder $posts
+     * @return Builder
+     */
+    protected function decorateSearch(Builder $posts)
     {
         return $posts;
     }
