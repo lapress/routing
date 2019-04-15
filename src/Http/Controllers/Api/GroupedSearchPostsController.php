@@ -25,6 +25,10 @@ class GroupedSearchPostsController extends BaseController
         $take = $request->take ?: config('wordpress.posts.search.grouped.take', 5);
         $postModel = config('wordpress.posts.model', Post::class);
         $postTypes = config('wordpress.posts.search.searchable', []);
+        
+        if ($query === '*' || in_array($request->ip(), config('scout.blockedIps', []))) {
+            return [];
+        }
 
         $postResource = (new PostResourceResolver(new $postModel))->resolve();
 
@@ -32,7 +36,7 @@ class GroupedSearchPostsController extends BaseController
         $data = [
             'posts' => [
                 'count' => $posts->count(),
-                'items' => $postResource::collection($posts->take($take)->get()),
+                'items' => $postResource::collection($this->decorateSearch($posts)->take($take)->get()),
             ],
         ];
 
@@ -41,12 +45,17 @@ class GroupedSearchPostsController extends BaseController
             $search = $model::search($query);
             $data[$postType] = [
                 'count' => $search->count(),
-                'items' => $postResource::collection($search->take($take)->get()),
+                'items' => $postResource::collection($this->decorateSearch($search)->take($take)->get()),
             ];
         }
 
         RegisterSearchEvent::dispatch($query);
 
         return response()->json($data, Response::HTTP_OK);
+    }
+
+    protected function decorateSearch($posts)
+    {
+        return $posts;
     }
 }

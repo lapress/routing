@@ -37,14 +37,23 @@ class SearchPostsController extends BaseController
         /** @var AbstractPost $class */
         $class = $this->postModelResolver->resolve();
         $query = $request->q;
-        $take = $request->take ?: 100;
+        $take = $request->take ?: 40;
 
+        if ($query === '*' || in_array($request->ip(), config('scout.blockedIps', []))) {
+            return [];
+        }
+        
         RegisterSearchEvent::dispatch($query, $class);
 
         $resource = (new PostResourceResolver(new $class))->resolve();
 
         return $resource::collection(
-            $class::search($query)->take($take)->get()
+            $this->decorateSearch($class::search($query))->paginate($take)
         );
+    }
+
+    protected function decorateSearch($posts)
+    {
+        return $posts;
     }
 }
