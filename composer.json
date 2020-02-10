@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "spatie/laravel-responsecache": "^4.4"
+        "spatie/laravel-responsecache": "^6.0"
     },
     "autoload": {
         "psr-4": {
