@@ -30,6 +30,6 @@ class DashboardController extends BaseController
             return redirect()->to($url);
         }
 
-        $this->script()->runAdminWithMenu('index.php');
+        return $this->script()->runAdminWithMenu('index.php');
     }
 }

@@ -12,9 +12,9 @@ class ScriptRunner
 {
     public function bootstrap()
     {
-        
+
     }
-    
+
     /**
      * @param       $filename
      * @param array $globals
@@ -33,7 +33,7 @@ class ScriptRunner
 
         return $this->runAdmin($filename, $globals);
     }
-    
+
     /**
      * @param       $filename
      * @param array $globals
@@ -59,8 +59,10 @@ class ScriptRunner
             global ${$global};
         }
 
+        ob_start();
+
         if (env('APP_ENV') == 'testing1') {
-            ob_start();
+
 
             // We'll evaluate the contents of the view inside a try/catch block so we can
             // flush out any stray output that might get out before an error occurs or
@@ -74,6 +76,9 @@ class ScriptRunner
             return ltrim(ob_get_clean());
         } else {
             require wordpress_path($path);
+            $response = ob_get_contents();
+            ob_end_clean();
+            return $response;
         }
     }
 }

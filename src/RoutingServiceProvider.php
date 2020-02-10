@@ -4,7 +4,10 @@ namespace LaPress\Routing;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use LaPress\Support\ThemeBladeDirectory;
+use LaPress\Routing\Http\Middleware\AdminMiddleware;
+use LaPress\Routing\Http\Middleware\PostTypeMiddleware;
+use LaPress\Routing\Http\Router;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 
 /**
  * @author    Sebastian Szczepański
@@ -12,8 +15,6 @@ use LaPress\Support\ThemeBladeDirectory;
  */
 class RoutingServiceProvider extends ServiceProvider
 {
-    const NAMESPACE = 'LaPress\Routing\Http\Controllers\Admin';
-
     /**
      * Bootstrap services.
      *
@@ -21,16 +22,7 @@ class RoutingServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app['view']->addNamespace('theme', ThemeBladeDirectory::get());
-        Route::prefix(config('wordpress.url.backend_prefix'))
-             ->namespace(static::NAMESPACE)
-             ->group(__DIR__.'/Http/routes.php');
-
-        return;
-        Route::namespace('LaPress\Routing\Http\Controllers')->group(function () {
-            $this->registerShowRoutes()
-                 ->registerListRoutes();
-        });
+        Router::backend();
     }
 
     /**
@@ -40,24 +32,16 @@ class RoutingServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app['router']->aliasMiddleware('wp-admin', AdminMiddleware::class);
+        $this->app['router']->aliasMiddleware('cache.response', CacheResponse::class);
 
-    }
+        Route::macro('postTypes', function ($withDefaultList = true) {
+            Router::lists();
+            Router::show();
+        });
 
-    private function registerShowRoutes()
-    {
-        foreach (config('wordpress.posts.routes') as $postType => $data) {
-            Route::get($data['route'], 'PostsController@show');
-        }
-
-        return $this;
-    }
-
-    private function registerListRoutes()
-    {
-        foreach (config('wordpress.posts.types') as $type => $model) {
-            Route::get(str_plural($type), 'PostsController@index');
-        }
-
-        return $this;
+        Route::macro('postTypesSearch', function ($postTypes = true){
+            Router::search($postTypes);
+        });
     }
 }
